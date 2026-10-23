@@ -2,7 +2,7 @@ import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { z } from "zod";
 
 export function createMcpServer(store) {
-  const server = new McpServer({ name: "doorstep", version: "0.1.0" });
+  const server = new McpServer({ name: "doorstep", version: "0.2.0" });
   const register = (
     name,
     description,
@@ -80,6 +80,29 @@ export function createMcpServer(store) {
       handoffId: z.string().uuid(),
     },
     ({ handoffId }) => ({ handoff: store.move(handoffId, "cancelled") }),
+  );
+  register(
+    "household_preferences",
+    "Update resident name, household label, handoff instructions and acknowledgement window after an explicit owner request. Existing arrival deadlines are unchanged.",
+    {
+      resident: z.string().trim().min(1).max(40),
+      household: z.string().trim().min(1).max(60),
+      instructions: z.string().trim().min(1).max(400),
+      acknowledgementSeconds: z.number().int().min(30).max(1800),
+    },
+    (args) => ({ preferences: store.setPreferences(args) }),
+  );
+  register(
+    "handoff_details",
+    "Read one handoff and its complete saved transition history.",
+    { handoffId: z.string().uuid() },
+    ({ handoffId }) => ({
+      handoff: store.get(handoffId),
+      history: store.db
+        .prepare("SELECT * FROM history WHERE handoff_id=? ORDER BY sequence")
+        .all(handoffId),
+    }),
+    true,
   );
   register(
     "set_quiet_mode",
