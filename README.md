@@ -4,7 +4,7 @@ A quieter arrival, a clearer handoff.
 
 ![Doorstep household overview](doorstep/evidence/v2/02-overview-dark.png)
 
-Version 0.2 includes a redesigned interface, household authentication and light/dark/system themes. Watch the [public working demo](https://youtu.be/evFmkHwWMFU), or read [the upgrade walkthrough](docs/UPGRADE-REVIEW.md). Final Devpost submission remains pending entrant declarations and terms acceptance.
+Version 0.2 includes a redesigned interface, household authentication and light/dark/system themes. Watch the [public working demo](https://youtu.be/evFmkHwWMFU), or read [the upgrade walkthrough](docs/UPGRADE-REVIEW.md). [Submitted to Build, Ship, Shape on October 23, 2026](https://devpost.com/software/doorstep-3kiuhv) under Alexa+ and the Open Source mini challenge. See the [submission receipt](docs/SUBMISSION-RECEIPT.md) for the confirmed release; older preparation documents preserve the pre-submission state.
 
 Doorstep helps a household keep track of parcels and visitors without relying on a sound notification. An arrival remains visible until the resident acknowledges it, and completion requires a separate confirmation. A self-hosted MCP server exposes the same workflow to compatible assistants. The included browser acts as a real MCP client and a deliberately limited Alexa+ experience simulator.
 
