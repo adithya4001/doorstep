@@ -1,0 +1,10 @@
+{
+  "name": "doorstep-hackathon",
+  "private": true,
+  "version": "0.1.0",
+  "scripts": {
+    "setup": "npm ci --prefix doorstep",
+    "start": "npm start --prefix doorstep",
+    "test": "npm test --prefix doorstep && npm test --prefix doorstep-flow"
+  }
+}
