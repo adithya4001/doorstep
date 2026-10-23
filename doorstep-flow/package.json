@@ -1,0 +1,9 @@
+{
+  "name": "doorstep-flow",
+  "version": "0.1.0",
+  "type": "module",
+  "exports": "./index.mjs",
+  "scripts": { "test": "node --test test/*.test.mjs" },
+  "license": "MIT",
+  "description": "A small, deterministic handoff state machine with idempotency and explicit acknowledgements."
+}
