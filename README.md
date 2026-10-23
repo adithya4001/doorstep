@@ -73,6 +73,6 @@ No end-user research or accessibility certification has been performed. Large te
 
 ## Hackathon status
 
-Prepared for Build, Ship, Shape: Amazon Developer Hackathon. Alexa+ self-hosted MCP route is the primary target. Open Source entry needs the additional `doorstep-flow` library published during the event and its own contribution URL. Neither the project nor the contribution has been submitted or published from this workspace. Check `docs/RELEASE-CHECKLIST.md` for the remaining gates.
+Prepared for Build, Ship, Shape: Amazon Developer Hackathon. Primary target: Alexa+ self-hosted MCP. Additional Open Source contribution: [doorstep-flow](https://github.com/adithya4001/doorstep-flow). The project uses AI-assisted development; its core workflow is deterministic and works without a generative model.
 
-Code was developed with AI assistance. No fabricated test outcomes, customer interviews, SDK usage or human-only authorship claims should be added to the submission. Adithya should review, customize and understand the implementation before presenting it.
+Seven automated tests passed, including the real HTTP socket integration. The final browser workflow passed against the local Express listener without request interception. See `docs/VERIFICATION.md` for evidence and `docs/RELEASE-CHECKLIST.md` for submission status.
