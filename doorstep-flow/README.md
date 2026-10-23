@@ -26,4 +26,4 @@ Run tests with Node.js 24: `npm test`.
 
 ## Open Source contribution
 
-This is intended as an additional reusable contribution alongside the Doorstep application. Publish this directory as a separate public repository with its MIT license, retain the event-period commit timestamp, and provide its URL and the main project URL in the submission. A local folder alone is not a completed Open Source challenge entry. Do not backdate commits or invent publication evidence.
+This reusable library is an additional contribution alongside the [Doorstep application](https://github.com/adithya4001/doorstep), which uses it at runtime. It is MIT licensed and independently usable without a server, browser, database or cloud account. The separate repository provides the contribution URL for the hackathon Open Source mini challenge.
