@@ -4,4 +4,6 @@
 **/*.log
 **/evidence/private/
 doorstep-source.zip
-doorstep-demo.mp4
+doorstep-demo*.mp4
+
+**/evidence/v2/youtube-published.jpg
