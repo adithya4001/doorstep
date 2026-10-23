@@ -1,0 +1,236 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>Doorstep · A calmer way home</title>
+    <link rel="stylesheet" href="/style.css" />
+  </head>
+  <body>
+    <aside class="sidebar">
+      <a class="brand" href="/" aria-label="Doorstep home"
+        ><span class="brand-icon">d.</span>doorstep<span class="brand-dot"
+          >●</span
+        ></a
+      >
+      <p class="eyebrow">A LITTLE MORE PEACE OF MIND</p>
+      <nav aria-label="Main navigation">
+        <button class="nav active" data-view="home">
+          ⌂ <span>Home overview</span></button
+        ><button class="nav" data-view="resident">
+          ▣ <span>Resident display</span></button
+        ><button class="nav" data-view="history">
+          ◷ <span>Handoff history</span></button
+        ><button class="nav" data-view="protocol">
+          ⌘ <span>Connection details</span>
+        </button>
+      </nav>
+      <div class="sidebar-bottom">
+        <span class="avatar">A</span>
+        <div>
+          <strong>Amma’s home</strong><small>Local household demo</small>
+        </div>
+      </div>
+    </aside>
+    <main>
+      <header>
+        <span class="breadcrumb"
+          >Your home <span>/</span> <b id="view-label">Overview</b></span
+        ><span class="connection" id="connection">Connecting…</span>
+      </header>
+      <section id="home" class="view">
+        <div class="title-row">
+          <div>
+            <p class="eyebrow">SMALL MOMENTS. THOUGHTFULLY HANDLED.</p>
+            <h1>Home, in the loop.</h1>
+            <p class="subtitle">
+              A quieter doorbell. A clearer handoff. One less thing to worry
+              about.
+            </p>
+          </div>
+          <span class="date" id="date"></span>
+        </div>
+        <div class="hero">
+          <div class="hero-copy">
+            <span class="pill"><span>●</span> MADE FOR YOUR EVERYDAY</span>
+            <h2>Someone at the door.<br />Everyone on the same page.</h2>
+            <p>
+              Give arrivals a little context, and your family a little breathing
+              room.
+            </p>
+            <button class="button cream" id="demo-start">
+              Try a parcel handoff <span>↗</span>
+            </button>
+          </div>
+          <div class="door-art" aria-hidden="true">
+            <div class="arch">
+              <div class="door">
+                <span class="peephole"></span><span class="handle"></span>
+              </div>
+            </div>
+            <div class="plant"><i></i><i></i><i></i><b></b></div>
+            <div class="parcel">↥<br />▰</div>
+            <div class="art-note">
+              <span>✓</span> A little less interruption.
+            </div>
+          </div>
+        </div>
+        <div class="stats">
+          <div>
+            <span class="stat-icon">↗</span>
+            <div><b id="active-count">0</b><small>Open handoffs</small></div>
+          </div>
+          <div>
+            <span class="stat-icon sage">✓</span>
+            <div>
+              <b id="done-count">0</b
+              ><small>Safely acknowledged & completed</small>
+            </div>
+          </div>
+          <div>
+            <span class="stat-icon peach">☾</span>
+            <div>
+              <b id="quiet-label">Quiet mode on</b
+              ><small>Visual prompts in this app</small>
+            </div>
+            <button
+              id="quiet-toggle"
+              class="toggle"
+              aria-label="Toggle quiet mode"
+              aria-pressed="true"
+            ></button>
+          </div>
+        </div>
+        <div class="workspace">
+          <section class="panel arrivals">
+            <div class="section-head">
+              <div>
+                <p class="eyebrow">AT YOUR DOOR</p>
+                <h3>Every arrival has a next step.</h3>
+              </div>
+              <span class="live-label">● Live in this app</span>
+            </div>
+            <div id="handoffs"></div>
+            <div class="manual">
+              <p>
+                Demo arrival
+                <small
+                  >Manually entered · no camera or Ring feed connected</small
+                >
+              </p>
+              <div>
+                <button class="button pale" id="parcel-button">＋ Parcel</button
+                ><button class="button pale" id="visitor-button">
+                  ＋ Visitor
+                </button>
+              </div>
+            </div>
+          </section>
+          <section class="panel assistant">
+            <div class="section-head">
+              <div>
+                <p class="eyebrow">ALEXA+ EXPERIENCE SIMULATOR</p>
+                <h3>A few words. All sorted.</h3>
+              </div>
+              <span class="assistant-orb">✳</span>
+            </div>
+            <div class="messages" id="messages" role="log" aria-live="polite">
+              <div class="message assistant-message">
+                Hi. I can help you check arrivals, turn quiet mode on, and keep
+                track of a handoff. What would you like to do?
+              </div>
+            </div>
+            <div class="suggestions">
+              <button data-prompt="What is happening at home?">
+                Check my home</button
+              ><button data-prompt="Turn quiet mode on">Keep it quiet</button
+              ><button data-prompt="I have seen the latest arrival">
+                I’ve seen it
+              </button>
+            </div>
+            <form id="chat-form">
+              <label class="sr-only" for="chat-input">Ask Doorstep</label
+              ><input
+                id="chat-input"
+                placeholder="Try “The parcel is received”"
+                maxlength="240"
+                autocomplete="off"
+              /><button aria-label="Send message" type="submit">↑</button>
+            </form>
+            <p class="assistant-footnote">
+              Local intent shortcuts → real MCP tools. No Alexa device
+              connected.
+            </p>
+          </section>
+        </div>
+        <div class="bottom-note">
+          <span>◇</span>
+          <p>
+            <strong>Your home stays your business.</strong> Local storage.
+            Explicit acknowledgements. No face recognition, door unlocking, or
+            external messages.
+          </p>
+        </div>
+      </section>
+      <section id="resident" class="view hidden resident-view">
+        <p class="eyebrow">RESIDENT DISPLAY · BROWSER PREVIEW</p>
+        <h1>A clear next step.</h1>
+        <p class="subtitle">
+          Large text, visible focus, and no sound needed. Use Tab and Enter, or
+          arrow keys.
+        </p>
+        <div id="resident-content"></div>
+        <p class="resident-caption">
+          This browser display has not been validated on Fire TV. It does not
+          establish Fire TV track eligibility.
+        </p>
+      </section>
+      <section id="history" class="view hidden">
+        <p class="eyebrow">NO GUESSWORK</p>
+        <h1>The handoff trail.</h1>
+        <p class="subtitle">
+          See what happened, and what still needs a little attention.
+        </p>
+        <div class="panel history-list" id="history-content"></div>
+      </section>
+      <section id="protocol" class="view hidden">
+        <p class="eyebrow">REAL REQUESTS. VISIBLE RESULTS.</p>
+        <h1>Behind the conversation.</h1>
+        <p class="subtitle">
+          This simulator is an MCP client. Every tool action below goes to the
+          working local server.
+        </p>
+        <div class="protocol-grid">
+          <div class="panel">
+            <h3>Connected over Streamable HTTP</h3>
+            <dl>
+              <dt>Endpoint</dt>
+              <dd>/mcp</dd>
+              <dt>Negotiated version</dt>
+              <dd id="protocol-version">Connecting</dd>
+              <dt>Transport</dt>
+              <dd>Stateless HTTP · JSON responses</dd>
+              <dt>Available tools</dt>
+              <dd id="tool-count">—</dd>
+            </dl>
+            <p class="muted">
+              MCP tools may be used by a compatible external agent. This app’s
+              chat uses transparent, deterministic intent shortcuts rather than
+              an LLM.
+            </p>
+            <button id="summary-button" class="button pale">
+              Request optional Bedrock summary
+            </button>
+            <p id="summary-output" role="status"></p>
+          </div>
+          <div class="panel">
+            <h3>Request log</h3>
+            <pre id="request-log"></pre>
+          </div>
+        </div>
+      </section>
+      <div id="toast" role="status" class="toast hidden"></div>
+    </main>
+    <script type="module" src="/app.js"></script>
+  </body>
+</html>
