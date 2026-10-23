@@ -1,236 +1,451 @@
 <!doctype html>
-<html lang="en">
+<html lang="en" data-theme="dark">
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width,initial-scale=1" />
-    <title>Doorstep · A calmer way home</title>
+    <meta name="color-scheme" content="dark light" />
+    <title>Doorstep — Home, in the loop.</title>
     <link rel="stylesheet" href="/style.css" />
+    <script type="module" src="/app.js"></script>
   </head>
   <body>
-    <aside class="sidebar">
-      <a class="brand" href="/" aria-label="Doorstep home"
-        ><span class="brand-icon">d.</span>doorstep<span class="brand-dot"
-          >●</span
-        ></a
-      >
-      <p class="eyebrow">A LITTLE MORE PEACE OF MIND</p>
-      <nav aria-label="Main navigation">
-        <button class="nav active" data-view="home">
-          ⌂ <span>Home overview</span></button
-        ><button class="nav" data-view="resident">
-          ▣ <span>Resident display</span></button
-        ><button class="nav" data-view="history">
-          ◷ <span>Handoff history</span></button
-        ><button class="nav" data-view="protocol">
-          ⌘ <span>Connection details</span>
-        </button>
-      </nav>
-      <div class="sidebar-bottom">
-        <span class="avatar">A</span>
-        <div>
-          <strong>Amma’s home</strong><small>Local household demo</small>
-        </div>
-      </div>
-    </aside>
-    <main>
-      <header>
-        <span class="breadcrumb"
-          >Your home <span>/</span> <b id="view-label">Overview</b></span
-        ><span class="connection" id="connection">Connecting…</span>
-      </header>
-      <section id="home" class="view">
-        <div class="title-row">
-          <div>
-            <p class="eyebrow">SMALL MOMENTS. THOUGHTFULLY HANDLED.</p>
-            <h1>Home, in the loop.</h1>
-            <p class="subtitle">
-              A quieter doorbell. A clearer handoff. One less thing to worry
-              about.
-            </p>
-          </div>
-          <span class="date" id="date"></span>
-        </div>
-        <div class="hero">
-          <div class="hero-copy">
-            <span class="pill"><span>●</span> MADE FOR YOUR EVERYDAY</span>
-            <h2>Someone at the door.<br />Everyone on the same page.</h2>
-            <p>
-              Give arrivals a little context, and your family a little breathing
-              room.
-            </p>
-            <button class="button cream" id="demo-start">
-              Try a parcel handoff <span>↗</span>
-            </button>
-          </div>
-          <div class="door-art" aria-hidden="true">
-            <div class="arch">
-              <div class="door">
-                <span class="peephole"></span><span class="handle"></span>
-              </div>
-            </div>
-            <div class="plant"><i></i><i></i><i></i><b></b></div>
-            <div class="parcel">↥<br />▰</div>
-            <div class="art-note">
-              <span>✓</span> A little less interruption.
-            </div>
-          </div>
-        </div>
-        <div class="stats">
-          <div>
-            <span class="stat-icon">↗</span>
-            <div><b id="active-count">0</b><small>Open handoffs</small></div>
-          </div>
-          <div>
-            <span class="stat-icon sage">✓</span>
-            <div>
-              <b id="done-count">0</b
-              ><small>Safely acknowledged & completed</small>
-            </div>
-          </div>
-          <div>
-            <span class="stat-icon peach">☾</span>
-            <div>
-              <b id="quiet-label">Quiet mode on</b
-              ><small>Visual prompts in this app</small>
-            </div>
-            <button
-              id="quiet-toggle"
-              class="toggle"
-              aria-label="Toggle quiet mode"
-              aria-pressed="true"
-            ></button>
-          </div>
-        </div>
-        <div class="workspace">
-          <section class="panel arrivals">
-            <div class="section-head">
-              <div>
-                <p class="eyebrow">AT YOUR DOOR</p>
-                <h3>Every arrival has a next step.</h3>
-              </div>
-              <span class="live-label">● Live in this app</span>
-            </div>
-            <div id="handoffs"></div>
-            <div class="manual">
-              <p>
-                Demo arrival
-                <small
-                  >Manually entered · no camera or Ring feed connected</small
-                >
-              </p>
-              <div>
-                <button class="button pale" id="parcel-button">＋ Parcel</button
-                ><button class="button pale" id="visitor-button">
-                  ＋ Visitor
-                </button>
-              </div>
-            </div>
-          </section>
-          <section class="panel assistant">
-            <div class="section-head">
-              <div>
-                <p class="eyebrow">ALEXA+ EXPERIENCE SIMULATOR</p>
-                <h3>A few words. All sorted.</h3>
-              </div>
-              <span class="assistant-orb">✳</span>
-            </div>
-            <div class="messages" id="messages" role="log" aria-live="polite">
-              <div class="message assistant-message">
-                Hi. I can help you check arrivals, turn quiet mode on, and keep
-                track of a handoff. What would you like to do?
-              </div>
-            </div>
-            <div class="suggestions">
-              <button data-prompt="What is happening at home?">
-                Check my home</button
-              ><button data-prompt="Turn quiet mode on">Keep it quiet</button
-              ><button data-prompt="I have seen the latest arrival">
-                I’ve seen it
-              </button>
-            </div>
-            <form id="chat-form">
-              <label class="sr-only" for="chat-input">Ask Doorstep</label
-              ><input
-                id="chat-input"
-                placeholder="Try “The parcel is received”"
-                maxlength="240"
-                autocomplete="off"
-              /><button aria-label="Send message" type="submit">↑</button>
-            </form>
-            <p class="assistant-footnote">
-              Local intent shortcuts → real MCP tools. No Alexa device
-              connected.
-            </p>
-          </section>
-        </div>
-        <div class="bottom-note">
-          <span>◇</span>
+    <section id="gate" class="gate">
+      <div class="gate-story">
+        <a class="brand" href="/"
+          >d<span class="brand-pip"></span><span>doorstep</span></a
+        >
+        <div class="gate-copy">
+          <span class="eyebrow"
+            >A LITTLE LESS DOORBELL. A LOT MORE CLARITY.</span
+          >
+          <h1>Home,<br />in the loop.</h1>
           <p>
-            <strong>Your home stays your business.</strong> Local storage.
-            Explicit acknowledgements. No face recognition, door unlocking, or
-            external messages.
+            A place for every arrival.<br />A clear next step for everyone at
+            home.
           </p>
+          <div class="door-art" aria-hidden="true">
+            <div class="orbit"></div>
+            <div class="door"><span></span></div>
+            <div class="art-chip">↗ &nbsp; Arrival recorded</div>
+            <div class="art-chip second">✓ &nbsp; Resident acknowledged</div>
+          </div>
         </div>
-      </section>
-      <section id="resident" class="view hidden resident-view">
-        <p class="eyebrow">RESIDENT DISPLAY · BROWSER PREVIEW</p>
-        <h1>A clear next step.</h1>
-        <p class="subtitle">
-          Large text, visible focus, and no sound needed. Use Tab and Enter, or
-          arrow keys.
-        </p>
-        <div id="resident-content"></div>
-        <p class="resident-caption">
-          This browser display has not been validated on Fire TV. It does not
-          establish Fire TV track eligibility.
-        </p>
-      </section>
-      <section id="history" class="view hidden">
-        <p class="eyebrow">NO GUESSWORK</p>
-        <h1>The handoff trail.</h1>
-        <p class="subtitle">
-          See what happened, and what still needs a little attention.
-        </p>
-        <div class="panel history-list" id="history-content"></div>
-      </section>
-      <section id="protocol" class="view hidden">
-        <p class="eyebrow">REAL REQUESTS. VISIBLE RESULTS.</p>
-        <h1>Behind the conversation.</h1>
-        <p class="subtitle">
-          This simulator is an MCP client. Every tool action below goes to the
-          working local server.
-        </p>
-        <div class="protocol-grid">
-          <div class="panel">
-            <h3>Connected over Streamable HTTP</h3>
-            <dl>
-              <dt>Endpoint</dt>
-              <dd>/mcp</dd>
-              <dt>Negotiated version</dt>
-              <dd id="protocol-version">Connecting</dd>
-              <dt>Transport</dt>
-              <dd>Stateless HTTP · JSON responses</dd>
-              <dt>Available tools</dt>
-              <dd id="tool-count">—</dd>
-            </dl>
-            <p class="muted">
-              MCP tools may be used by a compatible external agent. This app’s
-              chat uses transparent, deterministic intent shortcuts rather than
-              an LLM.
+        <small>Local household workspace · Manual arrival demo</small>
+      </div>
+      <div class="gate-panel">
+        <button class="theme-cycle text-button">Switch appearance ◐</button>
+        <div class="login-card">
+          <span class="eyebrow">YOUR HOUSEHOLD, TOGETHER</span>
+          <h2 id="gate-title">Connecting to your home…</h2>
+          <p id="gate-description">Checking the local workspace.</p>
+          <form id="auth-form" hidden>
+            <label
+              >Username<input
+                id="auth-username"
+                autocomplete="username"
+                minlength="3"
+                maxlength="32"
+                pattern="[a-zA-Z0-9._-]+"
+                required
+                placeholder="Your household username" /></label
+            ><label
+              >Password
+              <div class="password-field">
+                <input
+                  id="auth-password"
+                  type="password"
+                  required
+                  maxlength="128"
+                  autocomplete="current-password"
+                /><button
+                  type="button"
+                  id="show-password"
+                  aria-label="Show password"
+                >
+                  Show
+                </button>
+              </div></label
+            >
+            <p id="password-hint" class="micro"></p>
+            <p id="auth-error" class="error" role="alert"></p>
+            <button id="auth-submit" class="primary full">Continue →</button>
+          </form>
+          <div class="security-note">
+            <span>⌁</span>
+            <p>
+              One owner account for this local household. Your password is
+              hashed; your session stays in an HTTP-only cookie.
             </p>
-            <button id="summary-button" class="button pale">
-              Request optional Bedrock summary
-            </button>
-            <p id="summary-output" role="status"></p>
-          </div>
-          <div class="panel">
-            <h3>Request log</h3>
-            <pre id="request-log"></pre>
           </div>
         </div>
-      </section>
-      <div id="toast" role="status" class="toast hidden"></div>
-    </main>
-    <script type="module" src="/app.js"></script>
+        <small class="gate-footer"
+          >Built around the moments between arriving and receiving.</small
+        >
+      </div>
+    </section>
+    <div id="workspace" hidden>
+      <header class="topbar">
+        <a class="brand" href="/"
+          >d<span class="brand-pip"></span><span>doorstep</span></a
+        >
+        <div class="home-label">
+          <span class="house-icon">⌂</span>
+          <div>
+            <strong id="household-name">Our home</strong
+            ><small>Household workspace</small>
+          </div>
+        </div>
+        <div class="topbar-right">
+          <span id="today-label"></span
+          ><button
+            class="theme-cycle icon-button"
+            aria-label="Change colour theme"
+          >
+            ◐</button
+          ><button id="account-button" class="account">
+            <span id="avatar">H</span><span id="account-name">Household</span>
+          </button>
+        </div>
+      </header>
+      <nav class="navigation" aria-label="Workspace">
+        <button data-view="overview" class="active">Overview</button
+        ><button data-view="activity">Activity</button
+        ><button data-view="resident">Resident display</button
+        ><button data-view="settings">Settings</button
+        ><span id="connection" role="status">Connecting…</span>
+      </nav>
+      <main>
+        <section class="view" id="overview">
+          <div class="page-heading">
+            <div>
+              <span class="eyebrow" id="time-label">YOUR HOME, RIGHT NOW</span>
+              <h1>
+                Every arrival.<br class="mobile-break" />
+                One clear next step<span class="accent">.</span>
+              </h1>
+              <p>Keep the handoff moving, without adding to the noise.</p>
+            </div>
+            <button class="primary new-arrival">＋ New arrival</button>
+          </div>
+          <div id="metrics" class="metrics"></div>
+          <div class="overview-grid">
+            <div class="main-column">
+              <section class="flow-panel">
+                <div class="section-title">
+                  <div>
+                    <span class="eyebrow">HOW HOME STAYS IN SYNC</span>
+                    <h2>The handoff loop</h2>
+                  </div>
+                  <span class="badge">Manual demo</span>
+                </div>
+                <div class="flow">
+                  <div>
+                    <span class="flow-node">↗</span><b>Arrival</b
+                    ><small>You record the moment</small>
+                  </div>
+                  <span class="flow-line"></span>
+                  <div>
+                    <span class="flow-node core">d.</span><b>Doorstep</b
+                    ><small>Keeps the next step visible</small>
+                  </div>
+                  <span class="flow-line"></span>
+                  <div>
+                    <span class="flow-node">✓</span><b>Resident</b
+                    ><small>Sees it. Confirms receipt.</small>
+                  </div>
+                </div>
+                <p class="flow-foot">
+                  No connected camera or physical doorbell. Every change here is
+                  a saved household action.
+                </p>
+              </section>
+              <section class="board">
+                <div class="section-title">
+                  <h2>
+                    Arrival board <span id="board-count" class="count">0</span>
+                  </h2>
+                  <select id="sort-order" aria-label="Sort arrivals">
+                    <option value="newest">Newest first</option>
+                    <option value="oldest">Oldest first</option>
+                  </select>
+                </div>
+                <div class="board-tools">
+                  <div
+                    class="filters"
+                    role="group"
+                    aria-label="Filter arrivals"
+                  >
+                    <button data-filter="open" class="active">Open</button
+                    ><button data-filter="attention">Needs attention</button
+                    ><button data-filter="received">Received</button
+                    ><button data-filter="all">All</button>
+                  </div>
+                  <label class="search"
+                    ><span>⌕</span
+                    ><input
+                      id="search"
+                      placeholder="Search arrivals"
+                      aria-label="Search arrivals"
+                    /><kbd>/</kbd></label
+                  >
+                </div>
+                <div
+                  id="arrival-list"
+                  class="arrival-grid"
+                  aria-live="polite"
+                ></div>
+              </section>
+            </div>
+            <aside class="insights">
+              <section class="pulse-panel">
+                <div class="section-title">
+                  <span class="eyebrow">HOUSEHOLD PULSE</span
+                  ><span class="live-dot"></span>
+                </div>
+                <div class="pulse-orbit" aria-hidden="true"><span>⌂</span></div>
+                <h2 id="pulse-title">A clear doorstep.</h2>
+                <p id="pulse-copy"></p>
+                <div class="quiet-row">
+                  <div>
+                    <b>Quiet mode</b
+                    ><small id="quiet-description"
+                      >Visual prompts stay on</small
+                    >
+                  </div>
+                  <button
+                    id="quiet-toggle"
+                    class="switch"
+                    role="switch"
+                    aria-checked="false"
+                    aria-label="Quiet mode"
+                  >
+                    <span></span>
+                  </button>
+                </div>
+                <small class="micro"
+                  >Applies to this app. Physical doorbell settings stay
+                  unchanged.</small
+                >
+              </section>
+              <section class="activity-panel">
+                <div class="section-title">
+                  <h3>Latest moments</h3>
+                  <button class="text-button" data-view="activity">
+                    View all ↗
+                  </button>
+                </div>
+                <div id="recent-activity"></div>
+              </section>
+              <button id="assistant-open" class="assistant-tile">
+                <span>✳</span>
+                <div>
+                  <b>Say the next step</b
+                  ><small>Try the guided MCP console ↗</small>
+                </div>
+              </button>
+            </aside>
+          </div>
+        </section>
+        <section id="activity" class="view" hidden>
+          <div class="page-heading">
+            <div>
+              <span class="eyebrow">A TRACE OF EVERY HANDOFF</span>
+              <h1>Nothing lost in the loop<span class="accent">.</span></h1>
+              <p>
+                The latest 50 saved events. Open an arrival for its complete
+                timeline.
+              </p>
+            </div>
+            <button id="export-button" class="secondary">
+              ↓ Export activity
+            </button>
+          </div>
+          <div class="panel" id="activity-list"></div>
+        </section>
+        <section id="resident" class="view" hidden>
+          <div class="page-heading">
+            <div>
+              <span class="eyebrow">MADE TO BE SEEN</span>
+              <h1>
+                Hello, <span id="resident-name">Amma</span
+                ><span class="accent">.</span>
+              </h1>
+              <p>
+                A bigger view of what needs you. Arrow keys move between
+                actions.
+              </p>
+            </div>
+            <span class="badge">Browser display · not a Fire TV app</span>
+          </div>
+          <div id="resident-content"></div>
+        </section>
+        <section id="settings" class="view" hidden>
+          <div class="page-heading">
+            <div>
+              <span class="eyebrow">MAKE YOURSELF AT HOME</span>
+              <h1>Your home. Your rhythm<span class="accent">.</span></h1>
+              <p>Preferences are saved here and used by the MCP tools.</p>
+            </div>
+          </div>
+          <div class="settings-grid">
+            <section class="panel">
+              <h2>Household details</h2>
+              <p class="muted">A little context makes the next step easier.</p>
+              <form id="preferences-form">
+                <div class="form-grid">
+                  <label
+                    >Household name<input
+                      id="household-input"
+                      maxlength="60"
+                      required /></label
+                  ><label
+                    >Resident display name<input
+                      id="resident-input"
+                      maxlength="40"
+                      required
+                  /></label>
+                </div>
+                <label
+                  >Handoff instructions<textarea
+                    id="instructions-input"
+                    maxlength="400"
+                    rows="3"
+                    required
+                  ></textarea></label
+                ><label
+                  >Time before an unseen arrival needs attention<select
+                    id="window-input"
+                  >
+                    <option value="30">30 seconds</option>
+                    <option value="60">1 minute</option>
+                    <option value="120">2 minutes</option>
+                    <option value="300">5 minutes</option>
+                    <option value="600">10 minutes</option>
+                    <option value="1800">30 minutes</option>
+                  </select></label
+                >
+                <p class="micro">
+                  The new window applies to future arrivals. Instructions are
+                  shown here; they are not sent to a visitor.
+                </p>
+                <button class="primary">Save preferences</button
+                ><span id="preferences-result" role="status"></span>
+              </form>
+            </section>
+            <div>
+              <section class="panel">
+                <h2>A different light</h2>
+                <p class="muted">
+                  Choose what feels comfortable. Saved on this browser.
+                </p>
+                <div class="theme-options">
+                  <button data-theme-choice="light">☀<b>Light</b></button
+                  ><button data-theme-choice="dark">☾<b>Dark</b></button
+                  ><button data-theme-choice="system">◐<b>System</b></button>
+                </div>
+              </section>
+              <section class="panel session-panel">
+                <span class="eyebrow">HOUSEHOLD ACCESS</span>
+                <h3 id="session-title">Signed in</h3>
+                <p id="session-description" class="muted"></p>
+                <button id="logout" class="secondary">Sign out ↗</button>
+              </section>
+            </div>
+          </div>
+          <details class="panel developer">
+            <summary>Connection details & optional Bedrock summary</summary>
+            <p>
+              Streamable HTTP · protocol <b id="protocol-version">—</b> ·
+              <b id="tool-count">0</b> tools. The guided console uses explicit
+              shortcuts; it is not an Alexa device or an AI model.
+            </p>
+            <button id="summary-button" class="secondary">
+              Request optional AWS summary
+            </button>
+            <p id="summary-output" class="muted">
+              Requires your own configured AWS credentials and model access.
+            </p>
+            <pre id="request-log">No requests yet.</pre>
+          </details>
+        </section>
+        <footer>
+          <span>doorstep <b>02</b></span
+          ><span>Recorded locally. Clear by design.</span>
+        </footer>
+      </main>
+    </div>
+    <dialog id="arrival-dialog">
+      <div class="dialog-heading">
+        <span class="eyebrow">A NEW MOMENT AT HOME</span
+        ><button class="icon-button close-dialog" aria-label="Close">×</button>
+      </div>
+      <h2>Someone’s at the door.</h2>
+      <p class="muted">
+        Record what you observed. This is a manual demo arrival.
+      </p>
+      <form id="arrival-form">
+        <fieldset>
+          <legend>What arrived?</legend>
+          <div class="kind-options">
+            <label
+              ><input type="radio" name="kind" value="parcel" checked />▣
+              <b>A parcel</b><small>Something to receive</small></label
+            ><label
+              ><input type="radio" name="kind" value="visitor" />♙
+              <b>A visitor</b><small>Someone to greet</small></label
+            >
+          </div>
+        </fieldset>
+        <label
+          >Add a note <span class="muted">(optional)</span
+          ><textarea
+            id="arrival-note"
+            rows="3"
+            maxlength="240"
+            placeholder="For example: parcel beside the front door"
+          ></textarea>
+        </label>
+        <p class="micro">Keep sensitive information out of notes.</p>
+        <button id="arrival-submit" class="primary full">
+          Record arrival →
+        </button>
+      </form>
+    </dialog>
+    <dialog id="detail-dialog">
+      <div class="dialog-heading">
+        <span class="eyebrow">THE COMPLETE HANDOFF</span
+        ><button class="icon-button close-dialog" aria-label="Close">×</button>
+      </div>
+      <div id="detail-content"></div>
+    </dialog>
+    <dialog id="assistant-dialog">
+      <div class="dialog-heading">
+        <span class="eyebrow">GUIDED MCP CONSOLE</span
+        ><button class="icon-button close-dialog" aria-label="Close">×</button>
+      </div>
+      <h2>A few words. A clear action.</h2>
+      <p class="muted">
+        Explicit command shortcuts call the real MCP tools. No language model is
+        running here.
+      </p>
+      <label>Arrival to act on<select id="assistant-target"></select></label>
+      <div id="messages" role="log" aria-label="Console conversation"></div>
+      <div class="suggestions">
+        <button data-prompt="Check my home">Home status</button
+        ><button data-prompt="Turn quiet mode on">Quiet on</button
+        ><button data-prompt="I have seen it">I’ve seen it</button
+        ><button data-prompt="It is received">Received</button>
+      </div>
+      <form id="chat-form" class="chat-form">
+        <input
+          id="chat-input"
+          placeholder="Try: Check my home"
+          aria-label="Command"
+          required
+          maxlength="200"
+        /><button class="primary" aria-label="Send command">↑</button>
+      </form>
+    </dialog>
+    <div id="toast" class="toast" role="status" hidden></div>
   </body>
 </html>
