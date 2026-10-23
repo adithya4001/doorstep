@@ -10,7 +10,7 @@ test(
   { skip: !process.env.RUN_NETWORK_TESTS },
   async () => {
     const store = new Store(":memory:");
-    const { app } = createApp({ store, port: 0 });
+    const { app } = createApp({ store, port: 0, authRequired: false });
     const server = app.listen(0, "127.0.0.1");
     await new Promise((resolve) => server.once("listening", resolve));
     const url = `http://127.0.0.1:${server.address().port}`;
@@ -18,7 +18,7 @@ test(
     const transport = new StreamableHTTPClientTransport(new URL(`${url}/mcp`));
     try {
       await client.connect(transport);
-      assert.equal((await client.listTools()).tools.length, 6);
+      assert.equal((await client.listTools()).tools.length, 8);
       const created = await client.callTool({
         name: "record_arrival",
         arguments: { eventKey: "integration", kind: "parcel" },

@@ -54,7 +54,7 @@ test("HTTP Request/Response transport negotiates 2025-11-25 and validates comple
         fetch: fetcher,
       }),
     );
-    assert.equal((await client.listTools()).tools.length, 6);
+    assert.equal((await client.listTools()).tools.length, 8);
     const created = await client.callTool({
       name: "record_arrival",
       arguments: { eventKey: "same-event", kind: "parcel" },
