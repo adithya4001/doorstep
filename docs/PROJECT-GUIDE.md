@@ -10,10 +10,10 @@ Telugu memory cue: **vachindi → choosaanu → teesukunnaanu**. Ee moodu okate 
 
 ## Follow one request from click to database
 
-1. The user clicks **Try a parcel handoff** in `doorstep/public/index.html`.
-2. `public/app.js` calls `arrive('parcel')`. It creates a unique event key and invokes the `record_arrival` MCP tool.
+1. The signed-in owner clicks **New arrival**, chooses parcel or visitor and submits the optional note.
+2. `public/app.js` creates a unique event key when the dialog opens and invokes the `record_arrival` MCP tool on submission. A retry within the same dialog reuses that key.
 3. Its `rpc()` function sends a JSON-RPC request to `/mcp` with the protocol headers. JSON-RPC carries the method name, request ID and parameters.
-4. `server.mjs` checks Host and Origin, parses a bounded JSON body, and passes it to the official SDK's Streamable HTTP transport.
+4. `server.mjs` checks Host and Origin, parses a bounded JSON body, verifies an owner session or configured bearer token, and passes the call to the official SDK's Streamable HTTP transport.
 5. `lib/mcp.mjs` registers the tool with a Zod schema. The SDK validates that `kind` is parcel or visitor and `eventKey` is a bounded nonempty string.
 6. The tool invokes `Store.create()` in `lib/store.mjs`.
 7. A SQLite transaction checks the event key, inserts a new handoff when needed and records the first history entry. A duplicate event key returns the original handoff.
@@ -26,7 +26,8 @@ The browser is the client; the Express process is the server; SQLite is the data
 | File | Responsibility |
 | --- | --- |
 | `doorstep/server.mjs` | Builds the Express app, enforces local Host/Origin restrictions, exposes health/MCP/summary routes, serves assets, starts the timeout sweep and handles shutdown |
-| `doorstep/lib/mcp.mjs` | Registers six tools with schemas, descriptions and annotations; converts domain errors into tool error results |
+| `doorstep/lib/mcp.mjs` | Registers eight tools with schemas, descriptions and annotations; converts domain errors into tool error results |
+| `doorstep/lib/auth.mjs` | Creates one owner, derives salted scrypt hashes, issues hashed opaque sessions, checks expiry, revokes sessions and throttles invalid login attempts |
 | `doorstep/lib/store.mjs` | Opens SQLite, creates tables, stores preferences, creates/deduplicates arrivals, moves states transactionally, records history and finds overdue work |
 | `doorstep/lib/bedrock.mjs` | Optional SDK Converse request using a minimized snapshot; no model-driven mutation |
 | `doorstep/public/index.html` | Semantic page structure, navigation, resident panel, chat, history and connection views |
@@ -36,6 +37,7 @@ The browser is the client; the Express process is the server; SQLite is the data
 | `doorstep/test/workflow.test.mjs` | Workflow invariants, retries, deadlines, cancellation and database restart tests |
 | `doorstep/test/protocol.test.mjs` | Official SDK client/server tested through HTTP Request/Response objects without a network socket |
 | `doorstep/test/mcp.test.mjs` | Opt-in real local-socket integration check, including origin rejection and method handling |
+| `doorstep/test/auth.test.mjs` | Password/session lifecycle, expiry, throttling, protected real MCP access, preference validation and full historical detail |
 | `doorstep-flow/test/flow.test.mjs` | Exhaustive state-edge checks and privacy projection behavior |
 | `package-lock.json` | Locks resolved package versions for reproducible `npm ci` installs |
 
@@ -51,7 +53,7 @@ waiting ───────────────→ acknowledged ───�
 
 Only the edges in `transitions` are legal. `moveHandoff()` checks the current status, rejects an illegal next status and returns a new object. It does not mutate the input. Completed and cancelled are terminal states.
 
-The state machine is a business invariant, not a security boundary. The server has no user accounts. In a deployed product, it must also verify who is allowed to acknowledge or complete a particular household's handoff.
+The state machine is a business invariant, not a security boundary. The server has one local household owner account; MCP actions require its session or a configured bearer token. In a deployed multi-household product, every action must additionally verify household membership and authorization.
 
 **Why reject waiting → completed?** Seeing an arrival and receiving it are separate assertions. A notification being displayed is not evidence of receipt. The backend enforces this even when a client is buggy or an assistant asks for the wrong tool.
 
@@ -59,11 +61,13 @@ The state machine is a business invariant, not a security boundary. The server h
 
 ## Data and transactions
 
-SQLite stores three tables:
+SQLite stores five tables:
 
 - `handoffs`: one ID, one unique event key and a JSON payload per arrival.
 - `history`: an incrementing sequence, handoff ID, transition description and timestamp.
 - `preferences`: one household's resident label, quiet mode, instructions and acknowledgement timeout.
+- `owner`: one normalized username, random salt and scrypt-derived password hash.
+- `sessions`: SHA-256 hashes of random opaque tokens and their expiry timestamps. Raw session tokens only travel in the HttpOnly cookie.
 
 `BEGIN IMMEDIATE` starts a write transaction. A successful operation commits. An error rolls back. This prevents the database from retaining a state update without its corresponding history entry, or vice versa.
 
@@ -91,9 +95,9 @@ The browser sends these requests over HTTP POST to `/mcp`. It accepts JSON and e
 
 Stateless transport does not mean stateless product. Each HTTP request gets a new SDK server/transport object, while the shared Store persists the household workflow in SQLite. Conversation history in the browser is temporary, but handoff state survives the process restarting.
 
-`home_status` reads the snapshot. `record_arrival` creates one. `acknowledge_arrival`, `complete_handoff` and `cancel_handoff` move it. `set_quiet_mode` changes the local preference. Zod validates external argument shapes before handlers run; domain functions enforce valid state changes afterward.
+`home_status` reads the snapshot. `record_arrival` creates one. `acknowledge_arrival`, `complete_handoff` and `cancel_handoff` move it. `set_quiet_mode` changes the local preference. `household_preferences` validates and saves household details; existing deadlines are unchanged. `handoff_details` reads one arrival and its full saved timeline, beyond the dashboard's latest-50 feed. Zod validates external argument shapes before handlers run; domain functions enforce valid state changes afterward.
 
-Tool annotations tell clients about behavior but do not enforce permissions. The tool descriptions request explicit resident confirmation; a malicious external client could ignore that wording. Real deployment needs authenticated users and server-enforced authorization/consent policies.
+Tool annotations tell clients about behavior but do not enforce permissions. The tool descriptions request explicit resident confirmation; an authorized external client could ignore that wording. The server requires a household session or bearer token, but delegated consent and granular tool permissions are not implemented.
 
 ## Browser behavior
 
@@ -101,7 +105,17 @@ Tool annotations tell clients about behavior but do not enforce permissions. The
 
 The `busy` guard prevents overlapping writes from this browser. It is not a distributed lock. SQLite and transition checks protect backend consistency if another client also sends requests.
 
-The local chat uses regular-expression shortcuts, not a model. It recognizes a few published phrases. This keeps the prototype reproducible and credential-free, but it is not robust open-ended language understanding. A production conversational experience should have explicit confirmation of which handoff is targeted, especially when there are multiple arrivals. Currently the shortcuts choose the most recent matching active handoff; individual cards target their own IDs.
+The guided console uses anchored regular-expression shortcuts, not a model. It recognizes a few published phrases. It requires a specific arrival selection before acknowledging or completing it, so it cannot silently choose the most recent matching arrival. This is reproducible but is not open-ended language understanding. Cards also target their own IDs.
+
+Themes use CSS variables. Only the appearance preference is saved in browser localStorage; system mode follows `matchMedia`. Household settings are server-side preferences. Search/filter/sort operate on the current snapshot. Dashboard averages derive from today's completed records, never invented analytics. Native dialogs provide modal focus behavior. CSV export contains the latest 50 system-written events, not notes.
+
+## Authentication request path
+
+First launch calls `/api/auth/status`. If no owner exists, `/api/auth/setup` validates the username and 12–128 character password, derives a 64-byte key with asynchronous scrypt and a random 16-byte salt, and inserts the sole owner. A simultaneous second setup is rejected by the database constraint. Login derives the candidate hash, compares it with `timingSafeEqual`, and uses a generic failure message. Five failed attempts from one IP trigger a 15-minute process-local throttle.
+
+The server issues a random 32-byte session token and stores only its SHA-256 hash with a 12-hour expiry. The browser receives an HttpOnly, SameSite=Strict cookie. On protected requests the server hashes that cookie and verifies its stored expiry. Cookie-based writes require an allowed Origin. Logout deletes the session. Browser code clears protected content. HTTPS requests also receive the Secure cookie attribute; this prototype's supported loopback URL is HTTP.
+
+External compatible clients can use a separately configured bearer secret of at least 32 characters. This grants access to the one household, including writes. It is not OAuth or fine-grained delegation. `DOORSTEP_AUTH=off` is an explicit trusted-local-demo escape hatch, not the default. There is no password recovery, password-change UI or multi-account model. First-owner enrollment assumes the app is running on the owner's trusted computer.
 
 The resident display offers large buttons, keyboard controls and visible focus. It has not been tested with intended users or certified for accessibility. The browser preview does not establish native Fire TV support.
 
@@ -113,13 +127,13 @@ The summary response cannot call tools or mutate state. The code handles missing
 
 ## Security and privacy: what to say accurately
 
-The listener binds to loopback and restricts browser Origins and Host values to reduce cross-site requests and DNS-rebinding exposure. It bounds JSON input, sets a content-security policy, avoids third-party scripts and keeps credentials out of the browser. These are useful local protections, not production authentication.
+The listener binds to loopback and restricts browser Origins and Host values to reduce cross-site requests and DNS-rebinding exposure. It bounds JSON input, sets a content-security policy, avoids third-party scripts and keeps raw passwords/session tokens out of JavaScript storage. Owner authentication protects app API access. These controls have been tested for the local prototype; they do not constitute a production security review.
 
-The database is not encrypted at rest. A person with local filesystem access may read it. There is no user/household isolation, retention policy, secure enrollment or remote authorization. Do not expose the listener publicly. No face recognition, camera ingestion, door unlocking or emergency decisions are implemented.
+The database is not encrypted at rest. A person with local filesystem access may read it. There is no multi-household isolation, retention policy, email recovery or hardened remote enrollment. Do not expose the listener publicly. No face recognition, camera ingestion, door unlocking or emergency decisions are implemented.
 
 ## Evidence, not adjectives
 
-Final automated checks passed five application/protocol test cases and two library test cases, including the real-socket integration case with `RUN_NETWORK_TESTS=1`. Final browser checks passed against the actual Express listener on localhost without route interception. The earlier in-process run separately covered missing-Bedrock handling. An initial cross-context loopback restriction was resolved for final verification by running the listener and browser in the same permitted execution context.
+Version 0.2 checks passed eight application/authentication/protocol cases and two library cases, including authenticated real-socket integration with `RUN_NETWORK_TESTS=1`. Thirteen browser scenarios passed against the actual Express listener on localhost without route interception and with zero captured page errors. Screenshots and `browser-checks.json` are under `doorstep/evidence/v2`. The listener and browser ran in the same permitted execution context.
 
 Do not say “flawless”, “production-ready”, “fully accessible”, “proven to help seniors” or “all integrations tested”. State what was tested and name the limitation. This makes your engineering explanation stronger.
 
@@ -131,9 +145,9 @@ Do not say “flawless”, “production-ready”, “fully accessible”, “pr
 
 **What if the process crashes?** SQLite commits or rolls back the transaction. On restart, the app reopens the same file; snapshot reads recover overdue waiting items. External side effects are absent today. If notifications are added later, an outbox pattern would be worth evaluating.
 
-**What is the hardest missing production piece?** Identity and consent across a household, plus reliable input from a real device source. Tool descriptions alone cannot enforce who a user is or what they are allowed to do.
+**What is the hardest missing production piece?** Multi-person identity and delegated consent across households, plus reliable input from a real device source. The local owner account is a useful first step; tool descriptions alone cannot enforce granular permissions.
 
-**What would you change for scale?** Normalize key fields, add authenticated household ownership and migrations, move long work out of synchronous request handlers, implement durable job processing and use a database suited to the deployment. Measure before claiming a throughput target.
+**What would you change for scale?** Normalize key fields, add per-household authorization and migrations, move long work out of synchronous request handlers, implement durable job processing and use a database suited to the deployment. Measure before claiming a throughput target.
 
 **Why not enter every track?** Each track requires distinct runtime evidence. A browser view does not prove Fire TV operation, manual events are not Ring integration, and synthetic data does not satisfy Bee. The current strongest honest route is Alexa+ MCP with an additional reusable Open Source contribution after publication.
 

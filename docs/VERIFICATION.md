@@ -1,5 +1,21 @@
 # Verification record
 
+## Current local version 0.2
+
+Public core/test revision `63c5221573fc1448bc3b8024b3da962fa4310318` was independently downloaded and installed with npm ci. All ten tests passed with network checks enabled. GitHub Actions also passed: https://github.com/adithya4001/doorstep/actions/runs/39940073593.
+
+Ten automated tests passed on October 23, 2026 with `RUN_NETWORK_TESTS=1`: eight application/authentication/protocol tests and two independent library tests. None were skipped. This includes the official SDK client connecting to the protected real HTTP listener, owner setup/login, cookie flags, missing-session rejection, missing/foreign-Origin rejection, logout revocation, session expiry, password throttling, preference validation, unchanged existing deadlines and full history beyond the latest-50 feed.
+
+Thirteen real-Chrome browser scenarios passed without response interception, with zero captured page errors. Desktop viewport: 1440×1080. Mobile: 390×844, no horizontal document overflow. Scenarios cover setup, HttpOnly session, labelled samples, search, timeline acknowledgement/completion, saved settings, light-theme persistence after reload, escaped notes, CSV download, console target selection, overdue filter, sign-out clearing and successful re-login after an incorrect password.
+
+Screenshots under `doorstep/evidence/v2` show the redesigned interface against the actual Express server and SQLite database. `browser-checks.json` records scenario results. The synthetic review account lived only in the in-memory test database; it is not an entrant credential. Screenshots have been visually inspected in dark/light desktop and mobile sizes.
+
+The revised public demo is https://youtu.be/evFmkHwWMFU (103.33 seconds, 1440×1080, English captions). All 310 encoded frames decoded successfully; the real-server recording captured no browser page errors. The source update is published in successive browser commits. Final Devpost submission remains pending. Live AWS, Ring, Bee and native Alexa/Fire TV execution, user research, production security, performance/load testing and accessibility certification remain unverified.
+
+## Historical version 0.1 checks
+
+The remainder of this record describes the earlier build, preserved for provenance. Tool counts, screenshots and browser labels below do not describe 0.2.
+
 Initial verification date: October 23, 2026.
 
 ## Passed

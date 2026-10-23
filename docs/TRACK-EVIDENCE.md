@@ -17,7 +17,7 @@ Select only tracks backed by actual evidence at submission time. A project can w
 
 ## Personal eligibility
 
-User reported: solo entrant, GitHub `adithya4001`, Devpost registration complete, personal developer identity and college-email AWS account. Age, residence, conflicts of interest and institutional AWS usage authorization have not been confirmed. Review these personally before accepting the submission agreement. Do not invent personal details in the form.
+User reported: solo entrant, GitHub `adithya4001`, Devpost registration complete, personal developer identity and college-email AWS account. The entrant confirmed India residence, legal adulthood and no promotion-entity affiliation. Complete eligibility under all rules and agreement to binding terms still require the entrant's personal review. Institutional AWS usage authorization has not been established; no live AWS integration is claimed. Version 0.2 design was approved; release and draft updates are authorized. Final eligibility/terms declarations remain pending.
 
 ## Product feedback and friction
 

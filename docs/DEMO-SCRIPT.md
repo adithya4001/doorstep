@@ -1,3 +1,7 @@
+# Historical 0.1 demo script
+
+This script describes the previously published demo. Use `DEMO-SCRIPT-V2.md` for the revised local app. No new public video has been uploaded yet.
+
 # English demonstration script
 
 Target duration: 2 minutes 35 seconds. Record the real running application after the localhost release check succeeds. Use your own voice. There is no need for copyrighted music, stock footage or third-party logos.

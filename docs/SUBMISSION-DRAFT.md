@@ -1,8 +1,12 @@
+# Doorstep 0.2 submission text
+
+The entrant approved the revised design. The public v2 demo is https://youtu.be/evFmkHwWMFU. Final submission remains pending personal declarations and terms acceptance.
+
 # Doorstep
 
 **Tagline:** A quieter arrival. A clearer handoff.
 
-**Status:** Review draft. Replace the missing publication links and finish the release checklist before submitting. This document does not represent a completed Devpost submission.
+**Status:** Prepared submission text. This document does not represent a completed Devpost entry.
 
 ## Inspiration
 
@@ -14,17 +18,17 @@ We wanted to separate three moments that are often treated as one: an arrival, a
 
 Doorstep gives a parcel or visitor arrival a small, explicit workflow. A prompt stays on the resident display until it is acknowledged. Saved instructions then appear, and the resident confirms when the handoff is finished. If acknowledgement does not arrive within the configured window, the item stays visible in an attention queue.
 
-A household overview, a large-text resident display and a short conversation interface all operate on the same persistent state. The conversation can check the home, record an arrival, adjust quiet mode, acknowledge an arrival and confirm receipt. Its local intent shortcuts are deliberately limited and visible. A compatible external MCP client can discover and call the same tools.
+A household overview, a large-text resident display and a short conversation interface all operate on the same persistent state. The guided console can check the home, adjust quiet mode, acknowledge a selected arrival and confirm its receipt. Arrival creation uses the dedicated form. Its local intent shortcuts are deliberately limited and visible. A compatible external MCP client can discover and call the same tools.
 
-The demo uses manually entered arrivals. It does not connect to Ring, unlock doors, send visitor instructions, notify caregivers, or detect emergencies. Quiet mode changes this app's presentation, not a physical doorbell.
+The demo uses manually entered arrivals. It does not connect to Ring, unlock doors, send visitor instructions, notify caregivers, or detect emergencies. Quiet mode is a saved app preference and status indicator; the current prototype uses visual prompts only and does not control a physical doorbell.
 
 ## How it works
 
-The application uses Node.js, Express, SQLite and the official Model Context Protocol TypeScript SDK. Its self-hosted server exposes six validated tools over Streamable HTTP with protocol version 2025-11-25. The browser performs real initialization, tool discovery and tool calls; it is not a prerecorded conversation.
+The application uses Node.js, Express, SQLite and the official Model Context Protocol TypeScript SDK. Its self-hosted server exposes eight validated tools over Streamable HTTP with protocol version 2025-11-25. The browser performs real initialization, tool discovery and tool calls; it is not a prerecorded conversation. A local owner account protects household access with a salted scrypt password hash and opaque server sessions. The revised interface includes light/dark/system themes, arrival search and filters, complete handoff timelines, saved household preferences and activity export.
 
 A separate, reusable `doorstep-flow` library defines allowed transitions. SQLite transactions keep the handoff state and history together. Event keys make arrival retries idempotent, preventing the same event from producing duplicate handoffs. The database survives server restarts.
 
-Our protocol tests use an official MCP client against both the SDK's HTTP Request/Response transport and a real local HTTP listener. State-machine tests cover every permitted and rejected transition, acknowledgement deadlines, terminal states, redaction and persistent storage. Seven automated test cases passed. Final browser checks exercised the resident workflow against the real local server at desktop and mobile sizes, without route interception and without page errors.
+Our protocol tests use an official MCP client against both the SDK's HTTP Request/Response transport and a real local HTTP listener. State-machine tests cover every permitted and rejected transition, acknowledgement deadlines, terminal states, redaction and persistent storage. Ten automated test cases passed, including authentication and protected MCP access. Thirteen browser scenarios exercised the revised app against the real local server at desktop and mobile sizes, without route interception and without page errors.
 
 An optional Bedrock adapter generates a status summary from a minimized aggregate snapshot. That integration is implemented but has not been tested with live AWS credentials; it is not part of the verified primary demo yet.
 
@@ -40,12 +44,12 @@ The development environment initially blocked local loopback connections between
 
 ## What is next
 
-First, validate the product with people who benefit from visible arrival prompts. Then add an authenticated, consent-aware household model and a documented Ring event source, preserving the distinction between an incoming event and a confirmed handoff. Fire TV requires native-device or emulator validation before it is claimed as supported.
+First, validate the product with people who benefit from visible arrival prompts. Then extend the single-owner local account to a consent-aware multi-household model and add a documented Ring event source, preserving the distinction between an incoming event and a confirmed handoff. Fire TV requires native-device or emulator validation before it is claimed as supported.
 
 ## Track selections
 
 - Primary target: Alexa+ — self-hosted MCP server, demonstrated through our own browser client.
-- Additional target after publication: Open Source — the separate `doorstep-flow` library.
+- Additional target: Open Source — the separate `doorstep-flow` library.
 - AWS Builder: select only after a genuine live integration test and service feedback.
 - Fire TV, Ring and Bee: do not select for the current implementation.
 
@@ -56,7 +60,7 @@ First, validate the product with people who benefit from visible arrival prompts
 | GitHub username | adithya4001 |
 | Team | Solo |
 | Project repository | https://github.com/adithya4001/doorstep |
-| Public English demo under 3 minutes | https://youtu.be/tq_19A4B3_0 — public, 1:02, English captions |
+| Public English demo under 3 minutes | https://youtu.be/evFmkHwWMFU — public, approximately 1:44, English captions |
 | Open Source contribution URL | https://github.com/adithya4001/doorstep-flow |
 | Prior project | Newly built for this hackathon; confirm this remains true for the final submitted work |
 | AI assistance | Developed with AI assistance; entrant review and understanding required. Complete any organizer disclosure fields truthfully |

@@ -1,17 +1,19 @@
 # Before submission
 
+Version 0.2 design was approved. Revised source/tests/screenshots are being published and the new public demo is https://youtu.be/evFmkHwWMFU. Final submission requires the pending entrant declarations and agreement.
+
 The project is a working local prototype with verified core and browser tests. Public source repositories and a public demo are prepared; final Devpost submission remains subject to the entrant's review and agreement.
 
 ## Blocking checks
 
 - [ ] Entrant personally verifies age, residence, conflicts of interest and authority to use any institutional AWS account.
-- [ ] Launch from `start-doorstep.cmd` on the normal Windows desktop. Confirm `MCP connected` at `http://127.0.0.1:4317`.
+- [ ] Launch from `start-doorstep.cmd` on the normal Windows desktop. Create/sign in to the owner account and confirm `Household connected` at `http://127.0.0.1:4317`.
 - [x] Run the optional network integration test with `RUN_NETWORK_TESTS=1`. Final run passed.
 - [x] Exercise parcel creation, acknowledgement, completion and history in the real local-server browser path; quiet-mode behavior passed integration testing.
 - [ ] Restart the server and confirm the same state is restored.
 - [x] Publish the complete source tree to https://github.com/adithya4001/doorstep with the root MIT license, excluding dependencies, databases, credentials and private evidence.
 - [x] Publish the additional library at https://github.com/adithya4001/doorstep-flow as a separate public contribution.
-- [x] Record the real working application and publish the 1:02 English-captioned demo at https://youtu.be/tq_19A4B3_0.
+- [x] Record the real working application and publish the revised English-captioned demo at https://youtu.be/evFmkHwWMFU (approximately 1:44).
 - [x] Replace missing publication links in the submission draft.
 - [ ] Submit genuine tool feedback. Add a friction log only for reproducible first-hand observations.
 - [ ] Select Alexa+ and only additional tracks or challenges with demonstrated qualifying evidence.
